@@ -1,4 +1,6 @@
 import axios from "axios";
+import { store } from "../redux/store";
+import { logout } from "../redux/authSlice"; 
 
 const API = axios.create({
   baseURL: "http://localhost:5000/api"
@@ -13,6 +15,17 @@ API.interceptors.request.use((req) => {
 
   return req;
 });
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      store.dispatch(logout()); 
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const getProfile = () => API.get("/users/profile");
 
