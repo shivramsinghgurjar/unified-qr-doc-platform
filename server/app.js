@@ -1,23 +1,19 @@
-const express = require("express")
-const cors = require("cors")
-const mongoose = require("mongoose")
-require("dotenv").config()
+const express = require("express");
+const cors = require("cors");
 
-const app = express()
+const authRoutes = require("./src/routes/authRoutes");
+const documentRoutes = require("./src/routes/documentRoutes");
 
-app.use(cors())
-app.use(express.json())
+const app = express();
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err))
+app.use(cors());
+app.use(express.json());
 
-const authRoutes = require("./src/routes/authRoutes")
-
-app.use("/api/auth", authRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/documents", documentRoutes);
 
 app.get("/", (req, res) => {
-    res.send("API Running")
-})
+  res.send("API is running...");
+});
 
-module.exports = app
+module.exports = app;
