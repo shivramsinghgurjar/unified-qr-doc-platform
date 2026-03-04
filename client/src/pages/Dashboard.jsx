@@ -15,17 +15,13 @@ function Dashboard() {
     try {
       setFetchLoading(true);
 
-      const res = await axios.get(
-        "http://localhost:5000/api/documents",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:5000/api/documents", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setDocuments(res.data);
-
     } catch (error) {
       console.error(error);
     } finally {
@@ -49,12 +45,11 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setTitle("");
       fetchDocuments();
-
     } catch (error) {
       console.error(error);
     } finally {
@@ -63,22 +58,25 @@ function Dashboard() {
   };
 
   // ---------------- DELETE DOCUMENT ----------------
-  const deleteDocument = async (id) => {
+    const deleteDocument = async (id) => {
     try {
+      await axios.delete(`http://localhost:5000/api/documents/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      await axios.delete(
-        `http://localhost:5000/api/documents/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      alert("Document deleted successfully ✅");
 
       fetchDocuments();
-
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 403) {
+        alert("❌ Only ADMIN can delete documents.");
+      } else {
+        alert("❌ Failed to delete document.");
+      }
     }
   };
 
@@ -92,9 +90,7 @@ function Dashboard() {
       <Navbar />
 
       <div className="dashboard-container">
-
         <div className="dashboard-card">
-
           <div className="dashboard-header">
             <h2>My Documents 📄</h2>
           </div>
@@ -114,33 +110,21 @@ function Dashboard() {
           </form>
 
           {/* Total Count */}
-          <p className="doc-count">
-            Total Documents: {documents.length}
-          </p>
+          <p className="doc-count">Total Documents: {documents.length}</p>
 
           {/* Document List */}
           <div className="document-list">
-
             {fetchLoading ? (
               <p className="empty-text">Loading documents...</p>
-
             ) : documents.length === 0 ? (
-
-              <p className="empty-text">
-                No documents yet. Create one 🚀
-              </p>
-
+              <p className="empty-text">No documents yet. Create one 🚀</p>
             ) : (
-
               documents.map((doc) => (
                 <div key={doc._id} className="document-card">
-
                   <div>
                     <h3>{doc.title}</h3>
 
-                    <small>
-                      {new Date(doc.createdAt).toLocaleString()}
-                    </small>
+                    <small>{new Date(doc.createdAt).toLocaleString()}</small>
                   </div>
 
                   <button
@@ -149,16 +133,11 @@ function Dashboard() {
                   >
                     Delete
                   </button>
-
                 </div>
               ))
-
             )}
-
           </div>
-
         </div>
-
       </div>
     </>
   );

@@ -1,16 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/roleMiddleware");
+
 const {
   createDocument,
   getDocuments,
-  deleteDocument,
+  deleteDocument
 } = require("../controllers/documentController");
 
-const authMiddleware = require("../middleware/authMiddleware");
 
 router.post("/", authMiddleware, createDocument);
-router.get("/", authMiddleware, getDocuments);
-router.delete("/:id", authMiddleware, deleteDocument);
 
-module.exports = router;
+router.get("/", authMiddleware, getDocuments);
+
+// Only ADMIN can delete document
+router.delete(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("admin"),
+  deleteDocument
+);
+
+module.exports = router;  
