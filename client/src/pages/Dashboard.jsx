@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import QRCodeGenerator from "../components/QRCodeGenerator";
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
@@ -45,7 +46,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       setTitle("");
@@ -58,7 +59,7 @@ function Dashboard() {
   };
 
   // ---------------- DELETE DOCUMENT ----------------
-    const deleteDocument = async (id) => {
+  const deleteDocument = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/documents/${id}`, {
         headers: {
@@ -124,7 +125,12 @@ function Dashboard() {
                   <div>
                     <h3>{doc.title}</h3>
 
-                    <small>{new Date(doc.createdAt).toLocaleString()}</small>
+                    <small>
+                      {new Date(doc.createdAt).toLocaleString()}
+                    </small>
+
+                    {/* QR CODE */}
+                    <QRCodeGenerator documentId={doc._id} />
                   </div>
 
                   <button

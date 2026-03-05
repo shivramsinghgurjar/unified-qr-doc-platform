@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/Profile/ProfilePage";
+import DocumentView from "./pages/DocumentView";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -32,6 +33,16 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Document View */}
+        <Route
+          path="/document/:id"
+          element={
+            <ProtectedRoute>
+              <DocumentView />
             </ProtectedRoute>
           }
         />

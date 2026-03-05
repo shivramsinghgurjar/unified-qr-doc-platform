@@ -5,6 +5,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const documentRoutes = require("./src/routes/documentRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
+const qrRoutes = require("./src/routes/qrRoutes");
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/qr", qrRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
