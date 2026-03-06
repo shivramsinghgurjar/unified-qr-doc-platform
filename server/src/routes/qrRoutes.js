@@ -2,28 +2,23 @@ const express = require("express");
 const router = express.Router();
 
 const authMiddleware = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/roleMiddleware");
 
 const {
-  createDocument,
-  getDocuments,
-  getDocumentById,
-  deleteDocument
-} = require("../controllers/documentController");
+  createQR,
+  getUserQRs,
+  deleteQR,
+  scanQR,
+} = require("../controllers/qrController");
 
-router.post("/", authMiddleware, createDocument);
+// Create QR
+router.post("/", authMiddleware, createQR);
 
-router.get("/", authMiddleware, getDocuments);
+// Get User QRs
+router.get("/", authMiddleware, getUserQRs);
 
-// GET SINGLE DOCUMENT
-router.get("/:id", getDocumentById);
+// Delete QR
+router.delete("/:id", authMiddleware, deleteQR);
 
-// Only ADMIN can delete document
-router.delete(
-  "/:id",
-  authMiddleware,
-  authorizeRoles("admin"),
-  deleteDocument
-);
+router.get("/scan/:id", scanQR);
 
 module.exports = router;

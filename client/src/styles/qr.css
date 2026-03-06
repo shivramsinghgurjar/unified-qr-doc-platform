@@ -1,0 +1,41 @@
+.qr-dashboard {
+  padding: 40px;
+  color: white;
+}
+
+.qr-list {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.qr-card {
+  background: rgba(255,255,255,0.15);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.qr-card img {
+  width: 140px;
+}
+
+.qr-generator input {
+  padding: 10px;
+  width: 300px;
+}
+
+.qr-generator button {
+  padding: 10px 16px;
+  margin-left: 10px;
+}
+
+.delete-btn {
+  margin-top: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+}

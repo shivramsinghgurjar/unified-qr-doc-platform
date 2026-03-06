@@ -17,6 +17,10 @@ function Navbar() {
 
       <div className="nav-right">
         <Link to="/" className="nav-link">Dashboard</Link>
+
+        {/* NEW QR PAGE */}
+        <Link to="/qr" className="nav-link">QR</Link>
+
         <Link to="/profile" className="nav-link">Profile</Link>
 
         <button className="logout-btn" onClick={handleLogout}>

@@ -8,11 +8,12 @@ import DocumentView from "./pages/DocumentView";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import QRDashboard from "./pages/QRDashboard";
+
 function App() {
   return (
     <Router>
       <Routes>
-
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -47,6 +48,14 @@ function App() {
           }
         />
 
+        <Route
+          path="/qr"
+          element={
+            <ProtectedRoute>
+              <QRDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

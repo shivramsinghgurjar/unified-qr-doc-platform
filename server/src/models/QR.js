@@ -5,8 +5,13 @@ const qrSchema = new mongoose.Schema(
     documentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
+      default: null,
+    },
+    data: {
+      type: String,
       required: true,
     },
+
     qrUrl: {
       type: String,
       required: true,
@@ -20,7 +25,7 @@ const qrSchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("QR", qrSchema);
