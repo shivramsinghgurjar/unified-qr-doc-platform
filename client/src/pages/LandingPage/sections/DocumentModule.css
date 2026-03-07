@@ -1,0 +1,215 @@
+.doc-module {
+  background: var(--color-bg);
+}
+
+.doc-module__inner {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Sidebar */
+.doc-module__sidebar-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 14px;
+}
+
+.doc-module__tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.doc-module__tab {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition);
+}
+.doc-module__tab:hover {
+  border-color: var(--color-accent-soft);
+}
+.doc-module__tab--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.doc-module__tab-icon { font-size: 22px; }
+.doc-module__tab-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+.doc-module__tab-sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Auto-fill box */
+.doc-module__autofill {
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border: 1px solid var(--color-border);
+}
+.doc-module__autofill-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+.doc-module__autofill-note {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.doc-module__autofill-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.doc-module__autofill-item {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-module__lock { font-size: 11px; }
+
+/* Document preview card */
+.doc-module__doc-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.doc-module__doc-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--color-primary);
+  color: white;
+}
+.doc-module__doc-logo {
+  width: 36px; height: 36px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+.doc-module__doc-uni {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+.doc-module__doc-dept {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 2px;
+}
+.doc-module__doc-badge {
+  margin-left: auto;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.doc-module__doc-body {
+  padding: 28px 24px;
+}
+.doc-module__doc-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.doc-module__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.doc-module__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.doc-module__field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.doc-module__field-input {
+  height: 34px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.doc-module__doc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  flex-wrap: wrap;
+}
+
+.doc-module__export-btns {
+  display: flex;
+  gap: 10px;
+}
+.doc-module__export-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.doc-module__export-btn:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .doc-module__inner { grid-template-columns: 1fr; }
+  .doc-module__fields { grid-template-columns: 1fr; }
+}

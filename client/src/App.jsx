@@ -1,26 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import DocumentView from "./pages/DocumentView";
-
+import LandingPage from "./pages/LandingPage/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-
 import QRDashboard from "./pages/QRDashboard";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
+        {/* Landing */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Public */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Dashboard */}
+        {/* Protected */}
         <Route
-          path="/"
+          path="/app"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -28,7 +29,6 @@ function App() {
           }
         />
 
-        {/* Protected Profile */}
         <Route
           path="/profile"
           element={
@@ -38,7 +38,6 @@ function App() {
           }
         />
 
-        {/* Protected Document View */}
         <Route
           path="/document/:id"
           element={
@@ -56,8 +55,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
-    </Router>
+      </Router>
+   
   );
 }
 

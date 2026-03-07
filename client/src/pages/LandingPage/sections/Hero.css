@@ -1,0 +1,136 @@
+.hero {
+  padding-top: 140px;
+  padding-bottom: 100px;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* Background blobs */
+
+.hero__bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.hero__bg-blob--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #c4a0f0, transparent);
+  top: -100px;
+  right: -100px;
+}
+
+.hero__bg-blob--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #a67dd4, transparent);
+  bottom: -80px;
+  left: -80px;
+}
+
+/* Layout */
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+  gap: 40px;
+}
+
+/* Badge */
+
+.hero__badge {
+  margin-bottom: 24px;
+}
+
+/* Title */
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--color-text);
+  max-width: 900px;
+  margin: 0 auto 24px auto;
+}
+
+.hero__title em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* Subtitle */
+
+.hero__subtitle {
+  font-size: 17px;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  max-width: 600px;
+  margin: 0 auto 36px auto;
+}
+
+/* Buttons */
+
+.hero__actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+/* Social proof */
+
+.hero__social-proof {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.hero__social-proof strong {
+  color: var(--color-text);
+}
+
+/* Pillars */
+
+.hero__pillars {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.hero__pillar {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Floating animation (kept if needed later) */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__title {
+    font-size: 42px;
+  }
+}
