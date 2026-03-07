@@ -39,3 +39,16 @@
   padding: 8px 12px;
   border-radius: 6px;
 }
+
+
+.qr-customization{
+margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:8px;
+max-width:300px;
+}
+
+.qr-customization input{
+padding:4px;
+}
