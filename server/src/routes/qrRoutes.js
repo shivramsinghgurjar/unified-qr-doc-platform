@@ -5,18 +5,18 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   createQR,
+  updateQRImage,
   getUserQRs,
   deleteQR,
   scanQR,
 } = require("../controllers/qrController");
 
-// Create QR
 router.post("/", authMiddleware, createQR);
 
-// Get User QRs
+router.put("/:id/image", authMiddleware, updateQRImage);
+
 router.get("/", authMiddleware, getUserQRs);
 
-// Delete QR
 router.delete("/:id", authMiddleware, deleteQR);
 
 router.get("/scan/:id", scanQR);

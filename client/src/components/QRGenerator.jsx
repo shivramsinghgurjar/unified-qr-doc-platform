@@ -3,15 +3,15 @@ import { createQR } from "../services/qrService"
 import QRCodeStyling from "qr-code-styling"
 
 function QRGenerator({ refreshQRs }) {
-  const [text,    setText]    = useState("")
-  const [qrColor, setQrColor] = useState("#2e1a4a")
-  const [bgColor, setBgColor] = useState("#ffffff")
-  const [size,    setSize]    = useState(200)
-  const [logo,    setLogo]    = useState(null)
-  const [msg,     setMsg]     = useState(null)
+  const [text, setText] = useState("");
 
-  const qrRef  = useRef(null)
-  const qrCode = useRef(null)
+  const [qrColor, setQrColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#ffffff");
+  const [size, setSize] = useState(200);
+  const [logo, setLogo] = useState(null);
+
+  const qrRef = useRef(null);
+  const qrCode = useRef(null);
 
   useEffect(() => {
     qrCode.current = new QRCodeStyling({
@@ -20,44 +20,87 @@ function QRGenerator({ refreshQRs }) {
       dotsOptions:       { color: qrColor, type: "rounded" },
       backgroundOptions: { color: bgColor },
       image: logo || "",
-      imageOptions:      { crossOrigin: "anonymous", margin: 5 },
-    })
-    if (qrRef.current) qrCode.current.append(qrRef.current)
-  }, [])
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 5,
+      },
+    });
+
+    if (qrRef.current) {
+      qrCode.current.append(qrRef.current);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!qrCode.current) return
+    if (!qrCode.current) return;
+
     qrCode.current.update({
       width: size, height: size,
       data: text || "https://qgen.io",
       dotsOptions:       { color: qrColor },
       backgroundOptions: { color: bgColor },
       image: logo || "",
-    })
-  }, [text, qrColor, bgColor, size, logo])
+    });
+  }, [text, qrColor, bgColor, size, logo]);
 
   const handleGenerate = async () => {
-    if (!text.trim()) return setMsg({ ok: false, text: "Please enter a URL or text first." })
-    const res = await createQR(text)
-    if (res) {
-      refreshQRs()
-      setMsg({ ok: true, text: "QR code saved successfully." })
-      setText("")
-    }
-  }
+    if (!text) return;
+
+    // Step 1: create QR in backend
+    const res = await createQR({ data: text });
+
+    if (!res) return;
+
+    const qrId = res.qr._id;
+    const scanURL = res.scanURL;
+
+    // Step 2: update preview QR with scan URL
+    qrCode.current.update({
+      data: scanURL,
+    });
+
+    // Step 3: export customized QR
+    const blob = await qrCode.current.getRawData("png");
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(blob);
+
+    reader.onloadend = async () => {
+      const base64 = reader.result;
+
+      await fetch(`http://localhost:5000/api/qr/${qrId}/image`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          qrImage: base64,
+        }),
+      });
+
+      refreshQRs();
+    };
+  };
 
   const handleLogoUpload = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => setLogo(reader.result)
-    reader.readAsDataURL(file)
-  }
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setLogo(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="qr-generator">
+      <h3>Create QR Code</h3>
 
-      {/* URL input row */}
       <div className="qr-input-group">
         <input
           type="text"
@@ -65,16 +108,12 @@ function QRGenerator({ refreshQRs }) {
           value={text}
           onChange={e => { setText(e.target.value); setMsg(null) }}
         />
-        <button onClick={handleGenerate}>+ Generate</button>
+
+        <button onClick={handleGenerate}>Generate</button>
       </div>
 
-      {msg && <p className={`qr-msg ${msg.ok ? "qr-msg--ok" : "qr-msg--err"}`}>{msg.text}</p>}
-
-      <div className="qr-generator__body">
-
-        {/* Left: customization */}
-        <div className="qr-customization">
-          <p className="qr-customization__title">Customize</p>
+      <div className="qr-customization">
+        <h4>Customize QR</h4>
 
           <div className="qr-custom-field">
             <label>QR Color</label>
@@ -100,21 +139,18 @@ function QRGenerator({ refreshQRs }) {
             />
           </div>
 
-          <div className="qr-custom-field">
-            <label>Logo (optional)</label>
-            <input type="file" accept="image/*" onChange={handleLogoUpload} />
-          </div>
-        </div>
-
-        {/* Right: preview */}
-        <div className="qr-preview">
-          <p className="qr-preview__label">Preview</p>
-          <div className="qr-preview__box" ref={qrRef} />
-        </div>
-
+        <label>Logo</label>
+        <input type="file" accept="image/*" onChange={handleLogoUpload} />
       </div>
+
+      <div
+        ref={qrRef}
+        style={{
+          marginTop: "20px",
+        }}
+      />
     </div>
   )
 }
 
-export default QRGenerator
+export default QRGenerator;
