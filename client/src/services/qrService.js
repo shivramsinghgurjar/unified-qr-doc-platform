@@ -1,41 +1,55 @@
-const API_URL = "http://localhost:5000/api/qr";
+import axios from "axios";
 
-export const createQR = async (data) => {
-  const token = localStorage.getItem("token");
+const API = "http://localhost:5000/api/qr";
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ data }),
-  });
+// Create QR
+export const createQR = async (payload) => {
+  try {
 
-  return res.json();
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      API,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+
+  } catch (error) {
+    console.error(error);
+  }
 };
 
+
+// Get User QRs
 export const getUserQRs = async () => {
+
   const token = localStorage.getItem("token");
 
-  const res = await fetch(API_URL, {
+  const res = await axios.get(API, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  return res.json();
+  return res.data;
 };
 
+
+// Delete QR
 export const deleteQR = async (id) => {
+
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: "DELETE",
+  await axios.delete(`${API}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  return res.json();
 };
