@@ -1,61 +1,55 @@
-import { useEffect, useState } from "react";
-import QRGenerator from "../components/QRGenerator";
-import { getUserQRs, deleteQR } from "../services/qrService";
-import Navbar from "../components/Navbar";
-import "../styles/qr.css";
+import { useEffect, useState } from "react"
+import QRGenerator from "../components/QRGenerator"
+import { getUserQRs, deleteQR } from "../services/qrService"
+import Navbar from "../components/Navbar/Navbar"
+import "../styles/qr.css"
 
 function QRDashboard() {
-
-  const [qrs, setQrs] = useState([]);
+  const [qrs, setQrs] = useState([])
 
   const loadQRs = async () => {
-    const data = await getUserQRs();
-    setQrs(data);
-  };
+    const data = await getUserQRs()
+    setQrs(data)
+  }
 
-  useEffect(() => {
-    loadQRs();
-  }, []);
+  useEffect(() => { loadQRs() }, [])
 
   const handleDelete = async (id) => {
-    await deleteQR(id);
-    loadQRs();
-  };
+    await deleteQR(id)
+    loadQRs()
+  }
 
   return (
-    <>
-      <Navbar />
-
+    <Navbar>
       <div className="qr-dashboard">
 
-        <h2>My QR Codes</h2>
+        <div className="qr-dashboard__head">
+          <h2>My QR Codes</h2>
+          <p>Generate, customize and track all your QR codes in one place.</p>
+        </div>
 
         <QRGenerator refreshQRs={loadQRs} />
 
-        <div className="qr-list">
-
-          {qrs.map((qr) => (
-            <div key={qr._id} className="qr-card">
-
-              <img src={qr.qrUrl} alt="QR Code" />
-
-              <p>Scans: {qr.scans}</p>
-
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(qr._id)}
-              >
-                Delete
-              </button>
-
+        {qrs.length > 0 && (
+          <>
+            <h3 className="qr-list__heading">Saved QR Codes</h3>
+            <div className="qr-list">
+              {qrs.map((qr) => (
+                <div key={qr._id} className="qr-card">
+                  <img src={qr.qrUrl} alt="QR Code" />
+                  <p className="qr-card__scans">{qr.scans} scans</p>
+                  <button className="delete-btn" onClick={() => handleDelete(qr._id)}>
+                    Delete
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
-
-        </div>
+          </>
+        )}
 
       </div>
-    </>
-  );
+    </Navbar>
+  )
 }
 
-export default QRDashboard;
+export default QRDashboard

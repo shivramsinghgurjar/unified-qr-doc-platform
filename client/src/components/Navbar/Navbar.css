@@ -1,0 +1,11 @@
+.dash-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dash-main {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-bg-alt);
+  overflow-y: auto;
+}

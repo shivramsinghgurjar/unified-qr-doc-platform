@@ -7,6 +7,7 @@ import DocumentView from "./pages/DocumentView";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import QRDashboard from "./pages/QRDashboard";
+import QRAnalytics from "./pages/QRAnalytics";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        
         <Route
           path="/profile"
           element={
@@ -52,6 +53,15 @@ function App() {
           element={
             <ProtectedRoute>
               <QRDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <QRAnalytics />
             </ProtectedRoute>
           }
         />

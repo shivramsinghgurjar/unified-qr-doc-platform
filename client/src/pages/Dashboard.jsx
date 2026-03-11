@@ -1,151 +1,120 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "../components/Navbar";
-import QRCodeGenerator from "../components/QRCodeGenerator";
+import { useNavigate } from "react-router-dom";
+import { getDocuments, createDocument, deleteDocument } from "../services/documentService";
+import Navbar from "../components/Navbar/Navbar";
 
 function Dashboard() {
-  const [documents, setDocuments] = useState([]);
-  const [title, setTitle] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [documents,    setDocuments]    = useState([]);
+  const [title,        setTitle]        = useState("");
+  const [loading,      setLoading]      = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
+  const [deleteMsg,    setDeleteMsg]    = useState(null);
+  const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
-  // ---------------- FETCH DOCUMENTS ----------------
   const fetchDocuments = async () => {
     try {
       setFetchLoading(true);
-
-      const res = await axios.get("http://localhost:5000/api/documents", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setDocuments(res.data);
-    } catch (error) {
-      console.error(error);
+      const data = await getDocuments();
+      setDocuments(data);
+    } catch (err) {
+      console.error(err);
     } finally {
       setFetchLoading(false);
     }
   };
 
-  // ---------------- CREATE DOCUMENT ----------------
-  const createDocument = async (e) => {
+  useEffect(() => { fetchDocuments(); }, []);
+
+  const handleCreate = async (e) => {
     e.preventDefault();
-
     if (!title.trim()) return;
-
     try {
       setLoading(true);
-
-      await axios.post(
-        "http://localhost:5000/api/documents",
-        { title },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await createDocument(title);
       setTitle("");
       fetchDocuments();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // ---------------- DELETE DOCUMENT ----------------
-  const deleteDocument = async (id) => {
+  const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/documents/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      alert("Document deleted successfully ✅");
-
+      await deleteDocument(id);
+      setDeleteMsg({ ok: true, text: "Document deleted." });
       fetchDocuments();
-    } catch (error) {
-      console.error(error);
-
-      if (error.response?.status === 403) {
-        alert("❌ Only ADMIN can delete documents.");
-      } else {
-        alert("❌ Failed to delete document.");
-      }
+    } catch (err) {
+      const msg = err.response?.status === 403
+        ? "Only ADMIN can delete documents."
+        : "Failed to delete document.";
+      setDeleteMsg({ ok: false, text: msg });
+    } finally {
+      setTimeout(() => setDeleteMsg(null), 3000);
     }
   };
 
-  // ---------------- LOAD ON MOUNT ----------------
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
-
   return (
-    <>
-      <Navbar />
-
+    <Navbar>
       <div className="dashboard-container">
-        <div className="dashboard-card">
-          <div className="dashboard-header">
-            <h2>My Documents 📄</h2>
-          </div>
 
-          {/* Create Form */}
-          <form className="create-form" onSubmit={createDocument}>
-            <input
-              type="text"
-              placeholder="Enter document title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-
-            <button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create"}
-            </button>
-          </form>
-
-          {/* Total Count */}
-          <p className="doc-count">Total Documents: {documents.length}</p>
-
-          {/* Document List */}
-          <div className="document-list">
-            {fetchLoading ? (
-              <p className="empty-text">Loading documents...</p>
-            ) : documents.length === 0 ? (
-              <p className="empty-text">No documents yet. Create one 🚀</p>
-            ) : (
-              documents.map((doc) => (
-                <div key={doc._id} className="document-card">
-                  <div>
-                    <h3>{doc.title}</h3>
-
-                    <small>
-                      {new Date(doc.createdAt).toLocaleString()}
-                    </small>
-
-                    {/* QR CODE */}
-                    <QRCodeGenerator documentId={doc._id} />
-                  </div>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteDocument(doc._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="dashboard-header">
+          <h1>My Documents</h1>
+          <p>Create and manage your event documents.</p>
         </div>
+
+        {/* Create form */}
+        <form className="create-form" onSubmit={handleCreate}>
+          <input
+            type="text"
+            placeholder="Enter document title..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating..." : "+ Create"}
+          </button>
+        </form>
+
+        {deleteMsg && (
+          <p className={`dash-msg ${deleteMsg.ok ? "dash-msg--ok" : "dash-msg--err"}`}>
+            {deleteMsg.text}
+          </p>
+        )}
+
+        <p className="doc-count">{documents.length} document{documents.length !== 1 ? "s" : ""}</p>
+
+        <div className="document-list">
+          {fetchLoading ? (
+            <p className="empty-text">Loading...</p>
+          ) : documents.length === 0 ? (
+            <p className="empty-text">No documents yet. Create one above.</p>
+          ) : (
+            documents.map((doc) => (
+              <div
+                key={doc._id}
+                className="document-card"
+                onClick={() => navigate(`/document/${doc._id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <div>
+                  <h3>{doc.title}</h3>
+                  <small>{new Date(doc.createdAt).toLocaleString()}</small>
+                </div>
+                <button
+                  className="delete-btn"
+                  onClick={(e) => { e.stopPropagation(); handleDelete(doc._id); }}
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+
       </div>
-    </>
+    </Navbar>
   );
 }
 
