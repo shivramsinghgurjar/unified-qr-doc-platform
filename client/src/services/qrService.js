@@ -53,3 +53,19 @@ export const deleteQR = async (id) => {
   });
 
 };
+
+export const getQRAnalytics = async () => {
+
+  const token = localStorage.getItem("token")
+
+  const res = await fetch("http://localhost:5000/api/qr/analytics", {
+
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+
+  })
+
+  return res.json()
+
+}
