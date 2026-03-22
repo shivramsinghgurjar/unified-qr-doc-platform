@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDocuments, createDocument, deleteDocument } from "../services/documentService";
 import Navbar from "../components/Navbar/Navbar";
+import QRCodeGenerator from "../components/QRCodeGenerator";
 
 function Dashboard() {
-  const [documents,    setDocuments]    = useState([]);
-  const [title,        setTitle]        = useState("");
-  const [loading,      setLoading]      = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
-  const [deleteMsg,    setDeleteMsg]    = useState(null);
+  const [deleteMsg, setDeleteMsg] = useState(null);
   const navigate = useNavigate();
 
   const fetchDocuments = async () => {
@@ -96,11 +97,16 @@ function Dashboard() {
                 key={doc._id}
                 className="document-card"
                 onClick={() => navigate(`/document/${doc._id}`)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer"
+                }}
               >
-                <div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
                   <h3>{doc.title}</h3>
                   <small>{new Date(doc.createdAt).toLocaleString()}</small>
+                  
+                    <QRCodeGenerator value={doc._id} />
+                 
                 </div>
                 <button
                   className="delete-btn"
