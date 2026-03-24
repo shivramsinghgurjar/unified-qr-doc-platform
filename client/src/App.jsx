@@ -12,13 +12,17 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import QRDashboard from "./pages/QRDashboard";
 import QRAnalytics from "./pages/QRAnalytics";
 
-function App() {
+import DocumentsLibrary from "./pages/DocumentsLibrary";
+import WhatsHappeningTemplate from "./templates/WhatsHappeningTemplate";
+import DocumentPreview from "./pages/DocumentPreview";
 
+import EventCompletionTemplate from "./templates/EventCompletionTemplate";
+import EventPreview from "./pages/EventPreview";
+
+function App() {
   return (
     <Router>
-
       <Routes>
-
         {/* Landing Page */}
         <Route path="/" element={<LandingPage />} />
 
@@ -75,8 +79,51 @@ function App() {
           }
         />
 
-      </Routes>
+        <Route
+          path="/documents"
+          element={
+            <ProtectedRoute>
+              <DocumentsLibrary />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/documents/whats-happening"
+          element={
+            <ProtectedRoute>
+              <WhatsHappeningTemplate />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/documents/preview"
+          element={
+            <ProtectedRoute>
+              <DocumentPreview />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/documents/event-completion"
+          element={
+            <ProtectedRoute>
+              <EventCompletionTemplate />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/documents/event-preview"
+          element={
+            <ProtectedRoute>
+              <EventPreview />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

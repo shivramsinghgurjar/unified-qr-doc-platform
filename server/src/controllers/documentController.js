@@ -1,58 +1,63 @@
-const Document = require("../models/Document");
+const Document = require("../models/Document")
 
-const createDocument = async (req, res) => {
-  const { title, content } = req.body;
+// Create Document
+const createDocument = async (req,res)=>{
+try{
 
-  const document = await Document.create({
-    title,
-    content,
-    user: req.user._id,
-  });
+const { title, templateType, formData } = req.body
 
-  res.status(201).json(document);
-};
+const document = await Document.create({
+title,
+templateType,
+formData,
+createdBy:req.user._id
+})
 
-const getDocuments = async (req, res) => {
-  const documents = await Document.find({
-    user: req.user._id,
-  });
+res.status(201).json(document)
 
-  res.json(documents);
-};
+}catch(error){
+res.status(500).json({message:error.message})
+}
+}
 
-const getDocumentById = async (req, res) => {
-  try {
-    const document = await Document.findById(req.params.id);
 
-    if (!document) {
-      return res.status(404).json({ message: "Document not found" });
-    }
+// Get User Documents
+const getUserDocuments = async(req,res)=>{
+try{
 
-    res.json(document);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+const documents = await Document.find({
+createdBy:req.user._id
+}).sort({createdAt:-1})
 
-const deleteDocument = async (req, res) => {
-  const document = await Document.findById(req.params.id);
+res.json(documents)
 
-  if (!document) {
-    return res.status(404).json({ message: "Document not found" });
-  }
+}catch(error){
+res.status(500).json({message:error.message})
+}
+}
 
-  if (document.user.toString() !== req.user._id.toString()) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
 
-  await document.deleteOne();
+// Delete Document
+const deleteDocument = async(req,res)=>{
+try{
 
-  res.json({ message: "Document deleted" });
-};
+const document = await Document.findById(req.params.id)
+
+if(!document){
+return res.status(404).json({message:"Document not found"})
+}
+
+await document.deleteOne()
+
+res.json({message:"Document deleted"})
+
+}catch(error){
+res.status(500).json({message:error.message})
+}
+}
 
 module.exports = {
-  createDocument,
-  getDocuments,
-  getDocumentById,
-  deleteDocument,
-};
+createDocument,
+getUserDocuments,
+deleteDocument
+}

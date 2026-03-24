@@ -4,7 +4,7 @@ import "./Appsidebar.css"
 const NAV = [
   { to: "/qr",      icon: "⬡", label: "Create QR Code"  },
   { to: "/analytics", icon: "📊", label: "Analytics"    },
-  { to: "/app",     icon: "📄", label: "Documents"       },
+  { to: "/documents",     icon: "📄", label: "Documents"       },
   { to: "/profile", icon: "👤", label: "My Account"      },
 
 ]
@@ -23,7 +23,7 @@ export default function AppSidebar() {
     navigate("/login")
   }
 
-  const isActive = (to) => location.pathname === to
+  const isActive = (to) => location.pathname.startsWith(to)
 
   return (
     <aside className="sidebar">
