@@ -22,7 +22,7 @@ function Login() {
     try {
       const data = await loginUser(email, password)
       dispatch(setCredentials(data))
-      navigate("/app")
+       navigate("/documents")
     } catch {
       setError("Invalid email or password. Please try again.")
     } finally {

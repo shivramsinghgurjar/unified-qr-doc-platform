@@ -1,29 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
 
-const authMiddleware = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/roleMiddleware");
+const authMiddleware = require("../middleware/authMiddleware")
 
 const {
-  createDocument,
-  getDocuments,
-  getDocumentById,
-  deleteDocument
-} = require("../controllers/documentController");
+createDocument,
+getUserDocuments,
+deleteDocument
+} = require("../controllers/documentController")
 
-router.post("/", authMiddleware, createDocument);
+router.post("/",authMiddleware,createDocument)
 
-router.get("/", authMiddleware, getDocuments);
+router.get("/",authMiddleware,getUserDocuments)
 
-// GET SINGLE DOCUMENT
-router.get("/:id", getDocumentById);
+router.delete("/:id",authMiddleware,deleteDocument)
 
-// Only ADMIN can delete document
-router.delete(
-  "/:id",
-  authMiddleware,
-  authorizeRoles("admin"),
-  deleteDocument
-);
-
-module.exports = router;
+module.exports = router
