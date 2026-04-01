@@ -2,15 +2,32 @@ import axios from "axios";
 
 const API = "http://localhost:5000/api/qr";
 
-// Create QR
+// Create QR (existing)
 export const createQR = async (payload) => {
   try {
+    const token = localStorage.getItem("token");
 
+    const res = await axios.post(API, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 🚀 FIXED: Create QR for DOCUMENT
+export const createDocumentQR = async (documentId) => {
+  try {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      API,
-      payload,
+      `${API}/document`,
+      { documentId },   // ✅ correct format
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -25,10 +42,8 @@ export const createQR = async (payload) => {
   }
 };
 
-
 // Get User QRs
 export const getUserQRs = async () => {
-
   const token = localStorage.getItem("token");
 
   const res = await axios.get(API, {
@@ -40,10 +55,8 @@ export const getUserQRs = async () => {
   return res.data;
 };
 
-
 // Delete QR
 export const deleteQR = async (id) => {
-
   const token = localStorage.getItem("token");
 
   await axios.delete(`${API}/${id}`, {
@@ -51,21 +64,17 @@ export const deleteQR = async (id) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
 };
 
+// Analytics
 export const getQRAnalytics = async () => {
+  const token = localStorage.getItem("token");
 
-  const token = localStorage.getItem("token")
-
-  const res = await fetch("http://localhost:5000/api/qr/analytics", {
-
+  const res = await fetch(`${API}/analytics`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
+  });
 
-  })
-
-  return res.json()
-
-}
+  return res.json();
+};

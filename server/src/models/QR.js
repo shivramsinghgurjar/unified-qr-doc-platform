@@ -7,6 +7,7 @@ const qrSchema = new mongoose.Schema(
       ref: "Document",
       default: null,
     },
+
     data: {
       type: String,
       required: true,
@@ -16,10 +17,12 @@ const qrSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     scans: {
       type: Number,
       default: 0,
     },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -2,11 +2,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import html2pdf from "html2pdf.js";
 
-// ✅ Whats Happening Template
+// ✅ Templates
 import template from "../templates/whatsHappening/template.html?raw";
-
-// ✅ ECR Template Engine
 import { renderECR } from "../templates/eventCompletion/preview";
+
+// ✅ QR Service
+import { createDocumentQR } from "../services/qrService";
 
 function DocumentPreview() {
 
@@ -15,7 +16,6 @@ function DocumentPreview() {
 
   const doc = location.state;
 
-  // ✅ SAFETY CHECK
   if (!doc) {
     return (
       <Navbar>
@@ -28,7 +28,7 @@ function DocumentPreview() {
 
   const form = doc.data || doc;
 
-  // 🔥 COMMON TEMPLATE ENGINE (for Whats Happening)
+  // 🔥 TEMPLATE ENGINE
   const renderTemplate = (html, data) => {
     let output = html;
 
@@ -45,18 +45,16 @@ function DocumentPreview() {
     return output;
   };
 
-  // 🔥 MAIN LOGIC (SAFE UPDATE)
+  // 🔥 TEMPLATE SWITCH
   let finalHTML = "";
 
   if (doc.type === "event-completion") {
-    // ✅ ECR TEMPLATE
     finalHTML = renderECR(form);
   } else {
-    // ✅ EXISTING WHATS HAPPENING (UNCHANGED)
     finalHTML = renderTemplate(template, form);
   }
 
-  // ✅ SAVE (MongoDB)
+  // ✅ SAVE DOCUMENT
   const handleSave = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/documents", {
@@ -79,10 +77,52 @@ function DocumentPreview() {
     }
   };
 
-  // ✅ DOWNLOAD PDF (NO CHANGE)
+  // ✅ DOWNLOAD PDF
   const handleDownload = () => {
     const element = document.getElementById("doc-template");
-    html2pdf().from(element).save("event-report.pdf");
+
+    html2pdf().set({
+      margin: 10,
+      filename: "event-report.pdf",
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    }).from(element).save();
+  };
+
+  // 🚀 FIXED: GENERATE QR
+  const handleGenerateQR = async () => {
+    try {
+      // Step 1: Save document first
+      const response = await fetch("http://localhost:5000/api/documents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: doc.type,
+          data: form,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Document save failed");
+
+      const savedDoc = await response.json();
+
+      // Step 2: Generate QR (FIXED)
+      const qrResponse = await createDocumentQR(savedDoc._id);
+
+      if (!qrResponse) {
+        alert("QR generation failed");
+        return;
+      }
+
+      alert("QR Generated Successfully!");
+      console.log("Scan URL:", qrResponse.scanURL);
+
+    } catch (err) {
+      console.error(err);
+      alert("QR generation failed");
+    }
   };
 
   return (
@@ -92,14 +132,10 @@ function DocumentPreview() {
 
         <h2>Document Preview</h2>
 
-        {/* ✅ FINAL RENDER (WORKS FOR BOTH TYPES) */}
         <div dangerouslySetInnerHTML={{ __html: finalHTML }} />
 
         <div style={{ marginTop: "20px" }}>
-          <button
-            className="continue-btn"
-            onClick={handleSave}
-          >
+          <button className="continue-btn" onClick={handleSave}>
             Save Document
           </button>
 
@@ -114,6 +150,19 @@ function DocumentPreview() {
             }}
           >
             Download
+          </button>
+
+          <button
+            onClick={handleGenerateQR}
+            style={{
+              marginLeft: "10px",
+              background: "purple",
+              color: "white",
+              padding: "10px 15px",
+              borderRadius: "5px"
+            }}
+          >
+            Generate QR
           </button>
         </div>
 

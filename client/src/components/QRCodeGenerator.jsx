@@ -6,12 +6,15 @@ function QRCodeGenerator({ documentId }) {
 
   useEffect(() => {
     const generate = async () => {
-      const url = `http://localhost:5173/document/${documentId}`;
+
+      // 🔥 IMPORTANT CHANGE → backend scan route
+      const url = `http://localhost:5000/api/qr/scan/document/${documentId}`;
+
       const qrImage = await QRCode.toDataURL(url);
       setQr(qrImage);
     };
 
-    generate();
+    if (documentId) generate();
   }, [documentId]);
 
   return (

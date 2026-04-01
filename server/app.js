@@ -9,17 +9,18 @@ const qrRoutes = require("./src/routes/qrRoutes");
 
 const app = express();
 
+// ✅ MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
 // ✅ ROUTES
 app.use("/api/auth", authRoutes);
-app.use("/api/documents", documentRoutes); 
+app.use("/api/documents", documentRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/qr", qrRoutes);
 
-// ✅ TEST ROUTE
+// ✅ HEALTH CHECK
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
