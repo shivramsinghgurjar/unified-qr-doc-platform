@@ -9,10 +9,18 @@ const createDocument = async (req, res) => {
       return res.status(400).json({ message: "Invalid data" });
     }
 
-    const newDoc = new Document({ type, data });
+    const newDoc = new Document({
+      type,
+      data,
+
+      // 🚀 NEW (SAFE ADD)
+      createdBy: req.user?._id || null,
+    });
+
     await newDoc.save();
 
     res.status(201).json(newDoc);
+
   } catch (error) {
     console.error("Create Document Error:", error);
     res.status(500).json({ message: "Server error" });

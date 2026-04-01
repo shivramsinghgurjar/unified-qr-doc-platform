@@ -1,6 +1,7 @@
 const QR = require("../models/QR");
 const QRCode = require("qrcode");
 
+// ✅ EXISTING (NO CHANGE)
 const createQR = async (req, res) => {
   try {
     const { data } = req.body;
@@ -29,6 +30,35 @@ const createQR = async (req, res) => {
   }
 };
 
+// 🚀 NEW: CREATE QR FOR DOCUMENT
+const createDocumentQR = async (req, res) => {
+  try {
+    const { documentId } = req.body;
+
+    if (!documentId) {
+      return res.status(400).json({ message: "Document ID required" });
+    }
+
+    const scanURL = `http://localhost:5000/api/qr/scan/document/${documentId}`;
+
+    const qrImage = await QRCode.toDataURL(scanURL);
+
+    const qr = await QR.create({
+      documentId,
+      data: scanURL,
+      qrUrl: qrImage,
+      createdBy: req.user.id || req.user._id,
+    });
+
+    res.status(201).json(qr);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creating document QR" });
+  }
+};
+
+// ✅ EXISTING (NO CHANGE)
 const updateQRImage = async (req, res) => {
   try {
     const { qrImage } = req.body;
@@ -49,6 +79,7 @@ const updateQRImage = async (req, res) => {
   }
 };
 
+// ✅ EXISTING
 const getUserQRs = async (req, res) => {
   try {
     const qrs = await QR.find({
@@ -61,6 +92,7 @@ const getUserQRs = async (req, res) => {
   }
 };
 
+// ✅ EXISTING
 const deleteQR = async (req, res) => {
   try {
     const qr = await QR.findById(req.params.id);
@@ -81,6 +113,7 @@ const deleteQR = async (req, res) => {
   }
 };
 
+// ✅ EXISTING (UNCHANGED)
 const scanQR = async (req, res) => {
   try {
     const qr = await QR.findById(req.params.id);
@@ -90,7 +123,6 @@ const scanQR = async (req, res) => {
     }
 
     qr.scans += 1;
-
     await qr.save();
 
     return res.redirect(qr.data);
@@ -99,6 +131,30 @@ const scanQR = async (req, res) => {
   }
 };
 
+// 🚀 NEW: DOCUMENT SCAN
+const scanDocumentQR = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const qr = await QR.findOne({ documentId: id });
+
+    if (!qr) {
+      return res.status(404).send("QR not found");
+    }
+
+    qr.scans += 1;
+    await qr.save();
+
+    // 🔥 redirect to frontend
+    return res.redirect(`http://localhost:5173/documents/view/${id}`);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error scanning document QR");
+  }
+};
+
+// ✅ UPDATED ANALYTICS (SAFE EXTENSION)
 const getQRAnalytics = async (req, res) => {
   try {
 
@@ -107,14 +163,18 @@ const getQRAnalytics = async (req, res) => {
     const totalQRs = qrs.length;
 
     let totalScans = 0;
+    let documentScans = 0;
 
     qrs.forEach(qr => {
       totalScans += qr.scans;
+
+      if (qr.documentId) {
+        documentScans += qr.scans;
+      }
     });
 
     const topQR = qrs.sort((a,b) => b.scans - a.scans)[0] || null;
 
-    // Generate dynamic weekly chart
     const weeklyData = [
       { day: "Mon", scans: 0 },
       { day: "Tue", scans: 0 },
@@ -126,9 +186,7 @@ const getQRAnalytics = async (req, res) => {
     ];
 
     qrs.forEach(qr => {
-
       const day = new Date(qr.updatedAt).getDay();
-
       const map = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
       const index = weeklyData.findIndex(d => d.day === map[day]);
@@ -136,12 +194,12 @@ const getQRAnalytics = async (req, res) => {
       if(index !== -1){
         weeklyData[index].scans += qr.scans;
       }
-
     });
 
     res.json({
       totalQRs,
       totalScans,
+      documentScans, // 🚀 NEW
       uniqueScans: totalScans,
       topQR,
       weeklyData
@@ -154,9 +212,11 @@ const getQRAnalytics = async (req, res) => {
 
 module.exports = {
   createQR,
+  createDocumentQR, // 🚀 NEW
   updateQRImage,
   getUserQRs,
   deleteQR,
   scanQR,
+  scanDocumentQR, // 🚀 NEW
   getQRAnalytics
 };

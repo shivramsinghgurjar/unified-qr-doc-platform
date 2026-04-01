@@ -28,7 +28,11 @@ function QRAnalytics() {
 
   if (!analytics) return <div>Loading...</div>;
 
-  const chartData = analytics.weeklyData || [];
+  // 🔥 SAFE FALLBACK (supports both old + new)
+  const chartData =
+    analytics.weeklyData ||
+    analytics.qrData ||
+    [];
 
   return (
     <Navbar>
@@ -54,6 +58,12 @@ function QRAnalytics() {
           <div className="analytics-card">
             <h3>Unique Scans</h3>
             <p>{analytics.totalScans}</p>
+          </div>
+
+          {/* 🚀 NEW CARD (DOCUMENT QR) */}
+          <div className="analytics-card">
+            <h3>Document QR Scans</h3>
+            <p>{analytics.documentScans || 0}</p>
           </div>
 
         </div>

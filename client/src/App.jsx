@@ -23,106 +23,69 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Landing Page */}
+
         <Route path="/" element={<LandingPage />} />
 
-        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
-
         <Route
           path="/app"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
         />
 
         <Route
           path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
         />
 
+        {/* ✅ EXISTING */}
         <Route
           path="/document/:id"
-          element={
-            <ProtectedRoute>
-              <DocumentView />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><DocumentView /></ProtectedRoute>}
         />
 
-        {/* QR Dashboard */}
+        {/* 🚀 NEW ROUTE (IMPORTANT FOR QR REDIRECT) */}
+        <Route
+          path="/documents/view/:id"
+          element={<ProtectedRoute><DocumentView /></ProtectedRoute>}
+        />
+
         <Route
           path="/qr"
-          element={
-            <ProtectedRoute>
-              <QRDashboard />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><QRDashboard /></ProtectedRoute>}
         />
 
-        {/* QR Analytics */}
         <Route
           path="/analytics"
-          element={
-            <ProtectedRoute>
-              <QRAnalytics />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><QRAnalytics /></ProtectedRoute>}
         />
 
         <Route
           path="/documents"
-          element={
-            <ProtectedRoute>
-              <DocumentsLibrary />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><DocumentsLibrary /></ProtectedRoute>}
         />
 
         <Route
           path="/documents/whats-happening"
-          element={
-            <ProtectedRoute>
-              <WhatsHappeningTemplate />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><WhatsHappeningTemplate /></ProtectedRoute>}
         />
 
         <Route
           path="/documents/preview"
-          element={
-            <ProtectedRoute>
-              <DocumentPreview />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><DocumentPreview /></ProtectedRoute>}
         />
 
         <Route
           path="/documents/event-completion"
-          element={
-            <ProtectedRoute>
-              <EventCompletionTemplate />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><EventCompletionTemplate /></ProtectedRoute>}
         />
 
         <Route
           path="/documents/event-preview"
-          element={
-            <ProtectedRoute>
-              <EventPreview />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><EventPreview /></ProtectedRoute>}
         />
+
       </Routes>
     </Router>
   );

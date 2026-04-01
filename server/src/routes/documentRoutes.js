@@ -6,10 +6,7 @@ const {
 
 const router = express.Router();
 
-// ✅ CREATE DOCUMENT
 router.post("/", createDocument);
-
-// ✅ GET DOCUMENTS
 router.get("/", getDocuments);
 
-module.exports = router; 
+module.exports = router;

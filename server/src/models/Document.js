@@ -6,9 +6,17 @@ const documentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     data: {
       type: Object,
       required: true,
+    },
+
+    // 🚀 NEW (SAFE ADD)
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
   },
   { timestamps: true }

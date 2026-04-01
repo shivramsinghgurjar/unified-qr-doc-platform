@@ -5,36 +5,25 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   createQR,
+  createDocumentQR,
   updateQRImage,
   getUserQRs,
   deleteQR,
   scanQR,
+  scanDocumentQR,
   getQRAnalytics
 } = require("../controllers/qrController");
 
-
-// Create QR
+// Existing
 router.post("/", authMiddleware, createQR);
-
-
-// Update QR image (customized QR)
 router.put("/:id/image", authMiddleware, updateQRImage);
-
-
-// Get all user QRs
 router.get("/", authMiddleware, getUserQRs);
-
-
-// Analytics route
 router.get("/analytics", authMiddleware, getQRAnalytics);
-
-
-// Delete QR
 router.delete("/:id", authMiddleware, deleteQR);
-
-
-// Scan tracking route
 router.get("/scan/:id", scanQR);
 
+// 🚀 NEW DOCUMENT QR ROUTES
+router.post("/document", authMiddleware, createDocumentQR);
+router.get("/scan/document/:id", scanDocumentQR);
 
 module.exports = router;
