@@ -1,15 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
+import html2pdf from "html2pdf.js";
+
+// ✅ Whats Happening Template
+import template from "../templates/whatsHappening/template.html?raw";
+
+// ✅ ECR Template Engine
+import { renderECR } from "../templates/eventCompletion/preview";
 
 function DocumentPreview() {
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const form = location.state;
+  const doc = location.state;
 
-  // If user directly opens preview without data
-  if (!form) {
+  // ✅ SAFETY CHECK
+  if (!doc) {
     return (
       <Navbar>
         <div style={{ padding: "40px" }}>
@@ -19,32 +26,63 @@ function DocumentPreview() {
     );
   }
 
-  // ✅ SAVE DOCUMENT FUNCTION
-  const handleSave = () => {
+  const form = doc.data || doc;
 
-    const existingDocs =
-      JSON.parse(localStorage.getItem("documents")) || [];
+  // 🔥 COMMON TEMPLATE ENGINE (for Whats Happening)
+  const renderTemplate = (html, data) => {
+    let output = html;
 
-    // 🔥 IMPORTANT: Detect type automatically
-    let docType = "whats-happening";
+    Object.keys(data).forEach((key) => {
+      let value = data[key];
 
-    // If Event Completion fields exist → change type
-    if (form.completionDate || form.organizer) {
-      docType = "event-completion";
+      if (Array.isArray(value)) {
+        value = value.join(", ");
+      }
+
+      output = output.replaceAll(`{{${key}}}`, value || "");
+    });
+
+    return output;
+  };
+
+  // 🔥 MAIN LOGIC (SAFE UPDATE)
+  let finalHTML = "";
+
+  if (doc.type === "event-completion") {
+    // ✅ ECR TEMPLATE
+    finalHTML = renderECR(form);
+  } else {
+    // ✅ EXISTING WHATS HAPPENING (UNCHANGED)
+    finalHTML = renderTemplate(template, form);
+  }
+
+  // ✅ SAVE (MongoDB)
+  const handleSave = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/documents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: doc.type,
+          data: form,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed");
+
+      navigate("/documents");
+    } catch (error) {
+      console.error(error);
+      alert("Error saving document");
     }
+  };
 
-    const newDoc = {
-      id: Date.now(),
-      type: docType, // ✅ FIXED
-      ...form
-    };
-
-    localStorage.setItem(
-      "documents",
-      JSON.stringify([...existingDocs, newDoc])
-    );
-
-    navigate("/documents");
+  // ✅ DOWNLOAD PDF (NO CHANGE)
+  const handleDownload = () => {
+    const element = document.getElementById("doc-template");
+    html2pdf().from(element).save("event-report.pdf");
   };
 
   return (
@@ -54,60 +92,30 @@ function DocumentPreview() {
 
         <h2>Document Preview</h2>
 
-        <div
-          style={{
-            marginTop: "20px",
-            background: "#fff",
-            padding: "30px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-          }}
-        >
+        {/* ✅ FINAL RENDER (WORKS FOR BOTH TYPES) */}
+        <div dangerouslySetInnerHTML={{ __html: finalHTML }} />
 
-          <h3>{form.eventTitle}</h3>
+        <div style={{ marginTop: "20px" }}>
+          <button
+            className="continue-btn"
+            onClick={handleSave}
+          >
+            Save Document
+          </button>
 
-          {/* ✅ CONDITIONAL RENDERING (supports both types) */}
-
-          {form.startDate && (
-            <>
-              <p><strong>Type:</strong> {form.eventType}</p>
-              <p><strong>Start Date:</strong> {form.startDate}</p>
-              <p><strong>End Date:</strong> {form.endDate}</p>
-              <p><strong>Venue:</strong> {form.venue}</p>
-              <p><strong>Address:</strong> {form.address}</p>
-
-              <hr />
-
-              <p><strong>Contact Person:</strong> {form.contactName}</p>
-              <p><strong>Phone:</strong> {form.phone}</p>
-              <p><strong>Email:</strong> {form.email}</p>
-            </>
-          )}
-
-          {form.completionDate && (
-            <>
-              <p><strong>Type:</strong> {form.eventType}</p>
-              <p><strong>Completion Date:</strong> {form.completionDate}</p>
-              <p><strong>Organizer:</strong> {form.organizer}</p>
-              <p><strong>Attendees:</strong> {form.attendees}</p>
-
-              <hr />
-
-              <p><strong>Summary:</strong> {form.summary}</p>
-              <p><strong>Remarks:</strong> {form.remarks}</p>
-            </>
-          )}
-
+          <button
+            onClick={handleDownload}
+            style={{
+              marginLeft: "10px",
+              background: "green",
+              color: "white",
+              padding: "10px 15px",
+              borderRadius: "5px"
+            }}
+          >
+            Download
+          </button>
         </div>
-
-        {/* ✅ SAVE BUTTON */}
-        <button
-          className="continue-btn"
-          onClick={handleSave}
-          style={{ marginTop: "20px" }}
-        >
-          Save Document
-        </button>
 
       </div>
 

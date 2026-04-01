@@ -12,13 +12,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ ROUTES
 app.use("/api/auth", authRoutes);
-app.use("/api/documents", documentRoutes);
+app.use("/api/documents", documentRoutes); 
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
-
 app.use("/api/qr", qrRoutes);
 
+// ✅ TEST ROUTE
 app.get("/", (req, res) => {
   res.send("API is running...");
 });

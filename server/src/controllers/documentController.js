@@ -1,63 +1,36 @@
-const Document = require("../models/Document")
+const Document = require("../models/Document");
 
-// Create Document
-const createDocument = async (req,res)=>{
-try{
+// ✅ CREATE DOCUMENT
+const createDocument = async (req, res) => {
+  try {
+    const { type, data } = req.body;
 
-const { title, templateType, formData } = req.body
+    if (!type || !data) {
+      return res.status(400).json({ message: "Invalid data" });
+    }
 
-const document = await Document.create({
-title,
-templateType,
-formData,
-createdBy:req.user._id
-})
+    const newDoc = new Document({ type, data });
+    await newDoc.save();
 
-res.status(201).json(document)
+    res.status(201).json(newDoc);
+  } catch (error) {
+    console.error("Create Document Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
-}catch(error){
-res.status(500).json({message:error.message})
-}
-}
-
-
-// Get User Documents
-const getUserDocuments = async(req,res)=>{
-try{
-
-const documents = await Document.find({
-createdBy:req.user._id
-}).sort({createdAt:-1})
-
-res.json(documents)
-
-}catch(error){
-res.status(500).json({message:error.message})
-}
-}
-
-
-// Delete Document
-const deleteDocument = async(req,res)=>{
-try{
-
-const document = await Document.findById(req.params.id)
-
-if(!document){
-return res.status(404).json({message:"Document not found"})
-}
-
-await document.deleteOne()
-
-res.json({message:"Document deleted"})
-
-}catch(error){
-res.status(500).json({message:error.message})
-}
-}
+// ✅ GET DOCUMENTS
+const getDocuments = async (req, res) => {
+  try {
+    const docs = await Document.find().sort({ createdAt: -1 });
+    res.json(docs);
+  } catch (error) {
+    console.error("Fetch Document Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 module.exports = {
-createDocument,
-getUserDocuments,
-deleteDocument
-}
+  createDocument,
+  getDocuments,
+};

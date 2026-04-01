@@ -8,12 +8,33 @@ function EventCompletionTemplate() {
 
   const [form, setForm] = useState({
     eventTitle: "",
-    eventType: "",
-    completionDate: "",
-    organizer: "",
-    attendees: "",
+    eventDate: "",
+    location: "",
+    sponsor: "",
+
     summary: "",
-    remarks: ""
+    highlights: "",
+
+    images: "",
+    videos: "",
+
+    department: "",
+    school: "",
+
+    convenerName: "",
+    convenerPhone: "",
+    convenerEmail: "",
+
+    speaker1: "",
+    speaker2: "",
+    speaker3: "",
+    speaker4: "",
+    speaker5: "",
+    speaker6: "",
+
+    eventType: "",
+
+    participantsCount: ""
   });
 
   const handleChange = (e) => {
@@ -24,7 +45,17 @@ function EventCompletionTemplate() {
   };
 
   const handleContinue = () => {
-    navigate("/documents/event-preview", { state: form });
+    if (!form.eventTitle || !form.eventDate) {
+      alert("Please fill required fields");
+      return;
+    }
+
+    navigate("/documents/preview", {
+      state: {
+        type: "event-completion",
+        data: form
+      }
+    });
   };
 
   return (
@@ -36,18 +67,53 @@ function EventCompletionTemplate() {
 
         <div className="form-grid">
 
+          {/* BASIC DETAILS */}
           <input name="eventTitle" placeholder="Event Title" onChange={handleChange} />
-          <input name="eventType" placeholder="Event Type" onChange={handleChange} />
+          <input type="date" name="eventDate" onChange={handleChange} />
 
-          <input type="date" name="completionDate" onChange={handleChange} />
-          <input name="organizer" placeholder="Organizer Name" onChange={handleChange} />
+          <input name="location" placeholder="Location" onChange={handleChange} />
+          <input name="sponsor" placeholder="Sponsor (if any)" onChange={handleChange} />
 
-          <input name="attendees" placeholder="No. of Attendees" onChange={handleChange} />
+          {/* DESCRIPTION */}
+          <textarea name="summary" placeholder="Event Summary (Max 200 words)" onChange={handleChange} />
+          <textarea name="highlights" placeholder="Highlights & Notes" onChange={handleChange} />
 
-          <input name="summary" placeholder="Event Summary" onChange={handleChange} />
+          {/* MEDIA */}
+          <input name="images" placeholder="Images Description / Links" onChange={handleChange} />
+          <input name="videos" placeholder="Videos Description / Links" onChange={handleChange} />
 
-          <input name="remarks" placeholder="Remarks" onChange={handleChange} />
+          {/* ORGANIZATION */}
+          <input name="department" placeholder="Department" onChange={handleChange} />
+          <input name="school" placeholder="School" onChange={handleChange} />
 
+          {/* CONVENER */}
+          <input name="convenerName" placeholder="Convener Name" onChange={handleChange} />
+          <input name="convenerPhone" placeholder="Convener Phone" onChange={handleChange} />
+          <input name="convenerEmail" placeholder="Convener Email" onChange={handleChange} />
+
+          {/* SPEAKERS */}
+          <input name="speaker1" placeholder="Speaker 1" onChange={handleChange} />
+          <input name="speaker2" placeholder="Speaker 2" onChange={handleChange} />
+          <input name="speaker3" placeholder="Speaker 3" onChange={handleChange} />
+          <input name="speaker4" placeholder="Speaker 4" onChange={handleChange} />
+          <input name="speaker5" placeholder="Speaker 5" onChange={handleChange} />
+          <input name="speaker6" placeholder="Speaker 6" onChange={handleChange} />
+
+          {/* PARTICIPANTS */}
+          <input name="participantsCount" placeholder="Number of Participants" onChange={handleChange} />
+
+        </div>
+
+        {/* ✅ EVENT TYPE (MCQ – MATCHING DOC) */}
+        <div style={{ marginTop: "20px" }}>
+          <label><b>Type of Event</b></label><br />
+
+          <label><input type="radio" name="eventType" value="Conference" onChange={handleChange}/> Conference</label><br />
+          <label><input type="radio" name="eventType" value="Seminar" onChange={handleChange}/> Seminar</label><br />
+          <label><input type="radio" name="eventType" value="Workshop" onChange={handleChange}/> Workshop</label><br />
+          <label><input type="radio" name="eventType" value="Guest Lecture" onChange={handleChange}/> Guest Lecture</label><br />
+          <label><input type="radio" name="eventType" value="FDP" onChange={handleChange}/> FDP</label><br />
+          <label><input type="radio" name="eventType" value="Industrial Visit" onChange={handleChange}/> Industrial Visit</label>
         </div>
 
         <button className="continue-btn" onClick={handleContinue}>

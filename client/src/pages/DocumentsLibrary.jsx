@@ -8,11 +8,21 @@ function DocumentsLibrary() {
 
   const [documents, setDocuments] = useState([]);
 
-  // Load saved documents
+  // ✅ LOAD FROM BACKEND (SAFE UPDATE)
   useEffect(() => {
-    const storedDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    fetch("http://localhost:5000/api/documents")
+      .then((res) => res.json())
+      .then((data) => {
+        setDocuments(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching documents:", err);
 
-    setDocuments(storedDocs);
+        // 🔥 FALLBACK (IMPORTANT - keeps old system working)
+        const storedDocs =
+          JSON.parse(localStorage.getItem("documents")) || [];
+        setDocuments(storedDocs);
+      });
   }, []);
 
   return (
@@ -71,10 +81,16 @@ function DocumentsLibrary() {
           ) : (
             <div className="documents-grid">
               {documents.map((doc) => (
-                <div key={doc.id} className="document-card">
-                  <h4>{doc.eventTitle}</h4>
+                <div
+                  key={doc._id || doc.id}
+                  className="document-card"
+                >
+                  {/* ✅ FIXED DATA ACCESS */}
+                  <h4>
+                    {doc.data?.eventTitle || doc.eventTitle || "Untitled"}
+                  </h4>
 
-                  {/* Handles both types */}
+                  {/* ✅ TYPE FIX */}
                   <p>{doc.type || doc.eventType}</p>
 
                   <div className="template-actions">
@@ -82,7 +98,7 @@ function DocumentsLibrary() {
                       className="view-btn"
                       onClick={() =>
                         navigate("/documents/preview", {
-                          state: doc,
+                          state: doc.data ? doc : doc, // safe for both cases
                         })
                       }
                     >
