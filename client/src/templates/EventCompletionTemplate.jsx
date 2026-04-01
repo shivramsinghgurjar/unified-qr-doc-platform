@@ -104,7 +104,7 @@ function EventCompletionTemplate() {
 
         </div>
 
-        {/* ✅ EVENT TYPE (MCQ – MATCHING DOC) */}
+        {/* EVENT TYPE (MCQ – MATCHING DOC) */}
         <div style={{ marginTop: "20px" }}>
           <label><b>Type of Event</b></label><br />
 

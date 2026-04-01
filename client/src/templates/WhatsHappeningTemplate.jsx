@@ -41,7 +41,7 @@ function WhatsHappeningTemplate() {
     });
   };
 
-  // ✅ MSQ handler
+  // MSQ handler
   const handleCheckbox = (e) => {
     const { value, checked } = e.target;
 
@@ -102,7 +102,7 @@ function WhatsHappeningTemplate() {
 
           <input name="department" placeholder="Department" onChange={handleChange} />
 
-          {/* ✅ MCQ */}
+          {/* MCQ */}
           <select name="eventType" onChange={handleChange}>
             <option value="">Select Event Type</option>
             <option>Workshop</option>
@@ -127,7 +127,7 @@ function WhatsHappeningTemplate() {
 
         </div>
 
-        {/* 🔥 MSQ */}
+        {/* MSQ */}
         <div style={{ marginTop: "20px" }}>
           <label><b>Target Audience</b></label><br />
 
@@ -136,7 +136,7 @@ function WhatsHappeningTemplate() {
           <label><input type="checkbox" value="Faculty" onChange={handleCheckbox} /> Faculty</label>
         </div>
 
-        {/* ✅ MCQ */}
+        {/* MCQ */}
         <div style={{ marginTop: "20px" }}>
           <label><b>Media Coverage</b></label><br />
 
