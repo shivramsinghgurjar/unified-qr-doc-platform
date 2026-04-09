@@ -147,7 +147,7 @@ node server.js
 
 Server runs on:
 
-http://localhost:5000
+https://qgen-backend-n815.onrender.com
 
 ------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ http://localhost:5173
 
 ## API Base URL
 
-http://localhost:5000/api
+https://qgen-backend-n815.onrender.com/api
 
 Example endpoints:
 

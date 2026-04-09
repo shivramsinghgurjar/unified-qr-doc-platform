@@ -8,7 +8,7 @@ function DocumentView() {
   const [doc, setDoc] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/documents")
+    fetch("https://qgen-backend-n815.onrender.com/api/documents")
       .then(res => res.json())
       .then(data => {
         const found = data.find(d => d._id === id);

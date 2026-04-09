@@ -8,7 +8,7 @@ function QRCodeGenerator({ documentId }) {
     const generate = async () => {
 
       // 🔥 IMPORTANT CHANGE → backend scan route
-      const url = `http://localhost:5000/api/qr/scan/document/${documentId}`;
+      const url = `https://qgen-backend-n815.onrender.com/api/qr/scan/document/${documentId}`;
 
       const qrImage = await QRCode.toDataURL(url);
       setQr(qrImage);

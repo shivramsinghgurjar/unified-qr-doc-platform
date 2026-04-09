@@ -10,7 +10,7 @@ function DocumentsLibrary() {
 
   // ✅ LOAD FROM BACKEND (SAFE UPDATE)
   useEffect(() => {
-    fetch("http://localhost:5000/api/documents")
+    fetch("https://qgen-backend-n815.onrender.com/api/documents")
       .then((res) => res.json())
       .then((data) => {
         setDocuments(data);

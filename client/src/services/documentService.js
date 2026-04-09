@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = "http://localhost:5000/api/documents";
+const BASE = "https://qgen-backend-n815.onrender.com/api/documents";
 
 const authHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,

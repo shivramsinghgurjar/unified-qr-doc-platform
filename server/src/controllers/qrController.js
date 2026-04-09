@@ -10,7 +10,7 @@ const createQR = async (req, res) => {
       return res.status(400).json({ message: "QR data is required" });
     }
 
-    const baseURL = "http://localhost:5000/api/qr/scan";
+    const baseURL = "https://qgen-backend-n815.onrender.com/api/qr/scan";
 
     const qr = await QR.create({
       data,
@@ -39,7 +39,7 @@ const createDocumentQR = async (req, res) => {
       return res.status(400).json({ message: "Document ID required" });
     }
 
-    const scanURL = `http://localhost:5000/api/qr/scan/document/${documentId}`;
+    const scanURL = `https://qgen-backend-n815.onrender.com/api/qr/scan/document/${documentId}`;
 
     const qrImage = await QRCode.toDataURL(scanURL);
 

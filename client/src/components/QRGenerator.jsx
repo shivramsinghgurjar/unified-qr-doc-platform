@@ -69,7 +69,7 @@ function QRGenerator({ refreshQRs }) {
     reader.onloadend = async () => {
       const base64 = reader.result;
 
-      await fetch(`http://localhost:5000/api/qr/${qrId}/image`, {
+      await fetch(`https://qgen-backend-n815.onrender.com/api/qr/${qrId}/image`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

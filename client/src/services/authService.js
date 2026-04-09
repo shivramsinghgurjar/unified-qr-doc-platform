@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_URL = "http://localhost:5000/api/auth"
+const API_URL = "https://qgen-backend-n815.onrender.com/api/auth"
 
 // LOGIN
 export const loginUser = async (email, password) => {

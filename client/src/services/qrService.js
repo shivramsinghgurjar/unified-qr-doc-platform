@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/qr";
+const API = "https://qgen-backend-n815.onrender.com/api/qr";
 
 // Create QR (existing)
 export const createQR = async (payload) => {

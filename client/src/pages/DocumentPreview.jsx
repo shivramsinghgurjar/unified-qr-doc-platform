@@ -57,7 +57,7 @@ function DocumentPreview() {
   // ✅ SAVE DOCUMENT
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/documents", {
+      const response = await fetch("https://qgen-backend-n815.onrender.com/api/documents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ function DocumentPreview() {
   const handleGenerateQR = async () => {
     try {
       // Step 1: Save document first
-      const response = await fetch("http://localhost:5000/api/documents", {
+      const response = await fetch("https://qgen-backend-n815.onrender.com/api/documents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
