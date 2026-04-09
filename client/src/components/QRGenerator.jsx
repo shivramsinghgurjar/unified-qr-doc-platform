@@ -106,14 +106,15 @@ function QRGenerator({ refreshQRs }) {
           type="text"
           placeholder="Enter URL or text to encode..."
           value={text}
-          onChange={e => { setText(e.target.value); setMsg(null) }}
+          onChange={e => setText(e.target.value)}
         />
 
         <button onClick={handleGenerate}>Generate</button>
       </div>
 
-      <div className="qr-customization">
-        <h4>Customize QR</h4>
+      <div className="qr-generator__body">
+        <div className="qr-customization">
+          <h4>Customize QR</h4>
 
           <div className="qr-custom-field">
             <label>QR Color</label>
@@ -139,16 +140,20 @@ function QRGenerator({ refreshQRs }) {
             />
           </div>
 
-        <label>Logo</label>
-        <input type="file" accept="image/*" onChange={handleLogoUpload} />
-      </div>
+          <div className="qr-custom-field">
+            <label>Logo</label>
+            <input type="file" accept="image/*" onChange={handleLogoUpload} />
+          </div>
+        </div>
 
-      <div
-        ref={qrRef}
-        style={{
-          marginTop: "20px",
-        }}
-      />
+        <div className="qr-preview">
+          <div className="qr-preview__header">
+            <h4>Live Preview</h4>
+            <p>See your custom QR in real time.</p>
+          </div>
+          <div ref={qrRef} className="qr-preview__box" />
+        </div>
+      </div>
     </div>
   )
 }

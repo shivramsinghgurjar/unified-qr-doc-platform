@@ -29,7 +29,12 @@ function QRDashboard() {
       <div className="qr-dashboard">
 
         <div className="qr-dashboard__head">
-          <h2>My QR Codes</h2>
+          <div className="qr-dashboard__head-row">
+            <h2>My QR Codes</h2>
+            <a href="https://feedback-form-mu-three.vercel.app" className="qr-dashboard__create-btn">
+            (+) Create Custom Forms
+            </a>
+          </div>
           <p>Generate, customize and track all your QR codes in one place.</p>
         </div>
 
